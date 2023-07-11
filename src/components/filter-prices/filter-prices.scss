@@ -1,0 +1,24 @@
+.button-group {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 168px;
+  height: 50px;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  color: #fff;
+  background: #2196F3;
+  border-color: #2196F3;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+  color: #fff;
+  background: #137ace;
+  border-color: #137ace;
+}

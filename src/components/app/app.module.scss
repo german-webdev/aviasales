@@ -1,0 +1,32 @@
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #F3F7FA;
+}
+
+.main {
+  display: flex;
+  max-width: 754px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.aside {
+  width: 32.08%;
+}
+
+.section {
+  width: 67.92%;
+}
+
+.appHeader {
+
+}
+
+.appContent {
+  text-align: center;
+}
+
+.appFooter {
+  width: 100%;
+}
