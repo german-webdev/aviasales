@@ -20,7 +20,7 @@ export default class AviasalesService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getTickets() {
+  async requestTickets() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
     const response = await fetch(url);
@@ -31,14 +31,9 @@ export default class AviasalesService {
     return await response.json();
   }
 
-  async getHeaderInfo() {
-    const info = await this.getTickets();
-    return info.tickets.map((ticket) => this._transformHeader(ticket));
-  }
-
-  async getTicketInfo() {
-    const res = await this.getTickets();
-    return res.tickets.map((ticket) => ticket.segments.map((info) => this._transformTicket(info)));
+  async getTickets() {
+    const data = await this.requestTickets();
+    return data.tickets.map((ticket) => this._transformTickets(ticket));
   }
 
   _getPrice = (price) => {
@@ -77,14 +72,7 @@ export default class AviasalesService {
       return `${time.slice(0, 2)}ч ${time.slice(2, 4)}м`;
   };
 
-  _transformHeader = (ticket) => {
-    return {
-      price: this._getPrice(ticket.price),
-      logo: this._getLogo(ticket.carrier),
-    };
-  };
-
-  _transformTicket = (info) => {
+  _transformBodyTickets = (info) => {
     return {
       from: info.origin,
       to: info.destination,
@@ -94,4 +82,11 @@ export default class AviasalesService {
     };
   };
 
+  _transformTickets = (ticket) => {
+    return {
+      price: this._getPrice(ticket.price),
+      logo: this._getLogo(ticket.carrier),
+      segments: ticket.segments.map((body) => this._transformBodyTickets(body))
+    };
+  };
 }

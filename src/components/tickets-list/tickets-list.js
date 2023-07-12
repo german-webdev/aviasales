@@ -4,40 +4,42 @@ import { connect } from 'react-redux';
 import withAviasalesService from '../hoc';
 import ErrorBoundary from '../error-boundry';
 import Ticket from '../ticket';
-import { setHeaderTickets } from '../../actions';
+import { ticketLoader } from '../../actions';
 
 
-const TicketsList = ({ aviasalesService, ticketHeader }) => {
+const TicketsList = ({ aviasalesService, tickets, onLoadTickets }) => {
   useEffect(() => {
-    aviasalesService.getHeaderInfo().then(setHeaderTickets);
-    console.log('ticket', aviasalesService.getHeaderInfo().then(setHeaderTickets));
-    console.log('header', ticketHeader);
+    aviasalesService.getTickets().then(onLoadTickets);
+    console.log(tickets.ticketHeader);
   }, []);
 
   return (
     <ErrorBoundary>
       <ul>
-        { 
-          ticketHeader.map((header, i) => {
+        {
+          tickets.map((ticket, i) => {
             return (
               // eslint-disable-next-line react/no-array-index-key
               <li key={i}>
-                <Ticket header={header}/>
+                <Ticket ticket={ticket} />
               </li>
             );
           })
         }
+        {/* <Ticket/> */}
       </ul>
     </ErrorBoundary>
   );
 };
 
-const mapStateToProps = ({ ticketHeader }) => {
-  return { ticketHeader };
+const mapStateToProps = (state) => {
+  return { 
+    tickets: state.tickets.tickets,
+  };
 };
 
 const mapDispatchToProps = {
-  setHeaderTickets
+  onLoadTickets: ticketLoader,
 };
 
 export default withAviasalesService()(

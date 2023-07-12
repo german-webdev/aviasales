@@ -1,12 +1,14 @@
+import { TICKET_LOADED } from '../actions/action-types';
+
 const initialState = {
-  ticketHeader: []
+  tickets: [],
 };
 
 const ticketReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SHOW_ALL_TICKETS':
+    case TICKET_LOADED:
       return {
-        ticketHeader: action.payload,
+        tickets: action.payload
       };
 
     default:

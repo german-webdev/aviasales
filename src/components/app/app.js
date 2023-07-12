@@ -13,7 +13,6 @@ const App = ({ aviasalesService }) => {
   useEffect(() => {
     aviasalesService.getSearchId();
     console.log(aviasalesService.getTickets());
-    console.log(aviasalesService.getTicketInfo());
   }, []);
 
   return (

@@ -5,7 +5,7 @@ import ticketReducer from './ticketReducer';
 
 const rootReducer = combineReducers({
   filter: filterReducer,
-  ticketHeader: ticketReducer,
+  tickets: ticketReducer,
 });
 
 export default rootReducer;

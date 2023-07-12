@@ -1,7 +1,7 @@
 import { 
   UPDATE_CHECKED_LIST, 
   TOGGLE_CHECK_ALL, 
-  SHOW_ALL_TICKETS
+  TICKET_LOADED,
 } from './action-types';
 
 export const updateCheckedList = (checkedList) => ({
@@ -14,9 +14,9 @@ export const toggleCheckAll = (checkAll) => ({
   payload: checkAll,
 });
 
-export const setHeaderTickets = (ticketHeader) => ({
-  type: SHOW_ALL_TICKETS,
-  payload: ticketHeader,
+export const ticketLoader = (tickets) => ({
+  type: TICKET_LOADED,
+  payload: tickets,
 });
 
 

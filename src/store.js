@@ -10,7 +10,13 @@ const composeEnhancers =
       })
     : compose;
 
-const enhancer = composeEnhancers(applyMiddleware(thunk));
+const loggerMiddleware = (store) => (next) => (action) => {
+  const result = next(action);
+  console.log('Middleware', store.getState());
+  return result;
+};
+
+const enhancer = composeEnhancers(applyMiddleware(loggerMiddleware, thunk));
 
 const store = createStore(rootReducer, enhancer);
 

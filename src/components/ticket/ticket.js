@@ -3,38 +3,48 @@ import React from 'react';
 import styles from './ticket.module.scss';
 // import logo from './S7 Logo.svg';
 
-const Ticket = ({ header }) => {
+const Ticket = ({ ticket }) => {
   return (
     <div>
         <div className={styles.ticket}>
           <div className={styles.ticket_header}>
-            <span className={styles.ticket_price}>{header.price}</span>
-            <span className={styles.ticket_logo}><img src={header.logo} alt="logo" /></span>
+            <span className={styles.ticket_price}>{ticket.price}</span>
+            <span className={styles.ticket_logo}><img src={ticket.logo} alt="logo" /></span>
           </div>
-          <div className={styles.ticket_info}>
-            <div className={styles.ticket_infoHeader}>
-              <div>MOW – HKT</div>
-              <div>В пути</div>
-              <div>2 пересадки</div>
-            </div>
-            <div className={styles.ticket_infoContent}>
-              <div>10:45 – 08:00</div>
-              <div>21ч 15м</div>
-              <div>HKG, JNB</div>
-            </div>
-          </div>
-          <div className={styles.ticket_info}>
-            <div className={styles.ticket_infoHeader}>
-              <div>MOW – HKT</div>
-              <div>В пути</div>
-              <div>2 пересадки</div>
-            </div>
-            <div className={styles.ticket_infoContent}>
-              <div>10:45 – 08:00</div>
-              <div>21ч 15м</div>
-              <div>HKG, JNB</div>
-            </div>
-          </div>
+
+          {ticket.segments.map((body, i) => {
+            const stopsCount = () => {
+              let stops = null;
+              if (body.stops.length) {
+                if (body.stops.length === 1) {
+                  stops = <div>{body.stops.length} пересадка</div>;
+                } else {
+                  stops = <div>{body.stops.length} пересадки</div>;
+                }
+              } else {
+                stops = <div>Без пересадок</div>;
+              }
+              
+              return stops;
+              
+            };
+
+            return (
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={i} className={styles.ticket_info}>
+                <div className={styles.ticket_infoHeader}>
+                  <div>{body.from} – {body.to}</div>
+                  <div>В пути</div>
+                  {stopsCount()}
+                </div>
+                <div className={styles.ticket_infoContent}>
+                  <div>{body.timeOfPath}</div>
+                  <div>{body.duration}</div>
+                  <div>{body.stops.join(', ')}</div>
+                </div>
+              </div>
+            );
+          })}
         </div>
     </div>
   );
