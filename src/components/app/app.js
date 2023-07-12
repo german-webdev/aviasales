@@ -12,7 +12,7 @@ import styles from './app.module.scss';
 const App = ({ aviasalesService }) => {
   useEffect(() => {
     aviasalesService.getSearchId();
-    console.log(aviasalesService.getTickets());
+    console.log(aviasalesService.requestTickets());
   }, []);
 
   return (

@@ -7,17 +7,24 @@ import Ticket from '../ticket';
 import { ticketLoader } from '../../actions';
 
 
-const TicketsList = ({ aviasalesService, tickets, onLoadTickets }) => {
+const TicketsList = ({ aviasalesService, tickets, onLoadTickets, visibleTickets, cheaper }) => {
   useEffect(() => {
     aviasalesService.getTickets().then(onLoadTickets);
-    console.log(tickets.ticketHeader);
   }, []);
+
+  const filter = (arr) => {
+    let result;
+    if (cheaper) {
+      result = arr.sort((a, b) => a.price - b.price);
+    }
+    return result;
+  };
 
   return (
     <ErrorBoundary>
       <ul>
         {
-          tickets.map((ticket, i) => {
+          filter(tickets).slice(0, visibleTickets).map((ticket, i) => {
             return (
               // eslint-disable-next-line react/no-array-index-key
               <li key={i}>
@@ -26,7 +33,6 @@ const TicketsList = ({ aviasalesService, tickets, onLoadTickets }) => {
             );
           })
         }
-        {/* <Ticket/> */}
       </ul>
     </ErrorBoundary>
   );
@@ -35,6 +41,10 @@ const TicketsList = ({ aviasalesService, tickets, onLoadTickets }) => {
 const mapStateToProps = (state) => {
   return { 
     tickets: state.tickets.tickets,
+    visibleTickets: state.tickets.visibleTickets,
+    cheaper: state.price.cheaper,
+    faster: state.price.faster,
+    optimal: state.price.optimal,
   };
 };
 

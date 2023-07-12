@@ -28,6 +28,8 @@ export default class AviasalesService {
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, received ${response.status}`);
     }
+        
+
     return await response.json();
   }
 
