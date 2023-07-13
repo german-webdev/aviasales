@@ -2,13 +2,13 @@ import { UPDATE_CHECKED_LIST, TOGGLE_CHECK_ALL } from '../actions/action-types';
 
 const initialState = {
   plainOptions: [
-    { label: 'Без пересадок', value: 'option1' },
-    { label: '1 пересадка', value: 'option2' },
-    { label: '2 пересадки', value: 'option3' },
-    { label: '3 пересадки', value: 'option4' },
+    { label: 'Без пересадок', value: '0' },
+    { label: '1 пересадка', value: '1' },
+    { label: '2 пересадки', value: '2' },
+    { label: '3 пересадки', value: '3' },
   ],
-  checkedList: [],
-  checkAll: false,
+  checkedList: ['0', '1', '2', '3'],
+  checkAll: true,
 };
 
 const filterReducer = (state = initialState, action) => {

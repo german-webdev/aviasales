@@ -4,11 +4,28 @@ import styles from './ticket.module.scss';
 // import logo from './S7 Logo.svg';
 
 const Ticket = ({ ticket }) => {
+
+  const getPrice = (price) => {
+    const numFormat = price.toString();
+    const separator = ' ';
+    return numFormat.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, `$1${  separator}`);
+  };
+
+  const convertDuration = (min) => {
+    const time = [
+      Math.trunc(min / 60),
+      min % 60
+    ].map((el) => el < 10 ? `0${  el}` : el)
+    .join('');
+    return `${time.slice(0, 2)}ч ${time.slice(2, 4)}м`;
+};
+
+
   return (
     <div>
         <div className={styles.ticket}>
           <div className={styles.ticket_header}>
-            <span className={styles.ticket_price}>{ticket.price}</span>
+            <span className={styles.ticket_price}>{getPrice(ticket.price)} P</span>
             <span className={styles.ticket_logo}><img src={ticket.logo} alt="logo" /></span>
           </div>
 
@@ -39,7 +56,7 @@ const Ticket = ({ ticket }) => {
                 </div>
                 <div className={styles.ticket_infoContent}>
                   <div>{body.timeOfPath}</div>
-                  <div>{body.duration}</div>
+                  <div>{convertDuration(body.duration)}</div>
                   <div>{body.stops.join(', ')}</div>
                 </div>
               </div>

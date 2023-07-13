@@ -10,8 +10,8 @@ const ShowMore = ({ onAddTickets, aviasalesService, checkStopStatus, stop }) => 
   useEffect(() => { 
     aviasalesService.requestTickets().then((data) => checkStopStatus(data.stop));
    ;
-    console.log('stop', aviasalesService.requestTickets(checkStopStatus));
-  }, []);
+    console.log('stop', aviasalesService.requestTickets().then((data) => checkStopStatus(data.stop)));
+  }, [aviasalesService, checkStopStatus]);
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

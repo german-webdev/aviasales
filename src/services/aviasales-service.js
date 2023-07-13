@@ -38,12 +38,6 @@ export default class AviasalesService {
     return data.tickets.map((ticket) => this._transformTickets(ticket));
   }
 
-  _getPrice = (price) => {
-    const numFormat = price.toString();
-    const separator = ' ';
-    return numFormat.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, `$1${  separator}`);
-  };
-
   _getLogo = (carrier) => {
     return `https://pics.avs.io/99/36/${carrier}.png`;
   };
@@ -65,28 +59,19 @@ export default class AviasalesService {
     return `${depTime} - ${arrivTime}`;
   }
 
-  _convertDuration = (min) => {
-      const time = [
-        Math.trunc(min / 60),
-        min % 60
-      ].map((el) => el < 10 ? `0${  el}` : el)
-      .join('');
-      return `${time.slice(0, 2)}ч ${time.slice(2, 4)}м`;
-  };
-
   _transformBodyTickets = (info) => {
     return {
       from: info.origin,
       to: info.destination,
       timeOfPath: this._getTimeOfPath(info.date, info.duration),
-      duration: this._convertDuration(info.duration),
+      duration: info.duration,
       stops: info.stops,
     };
   };
 
   _transformTickets = (ticket) => {
     return {
-      price: this._getPrice(ticket.price),
+      price: ticket.price,
       logo: this._getLogo(ticket.carrier),
       segments: ticket.segments.map((body) => this._transformBodyTickets(body))
     };

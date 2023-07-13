@@ -15,7 +15,7 @@ const ticketReducer = (state = initialState, action) => {
     case TICKET_LOADED:
       return {
         ...state,
-        tickets: action.payload
+        tickets: action.payload,
       };
 
     case ADD_TICKETS:
