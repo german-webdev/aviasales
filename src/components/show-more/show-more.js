@@ -1,22 +1,18 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import withAviasalesService from '../hoc';
-import { addTickets, setStopStatus } from '../../actions';
+import { addTickets } from '../../actions';
 
 import styles from './show-more.module.scss';
 
-const ShowMore = ({ onAddTickets, aviasalesService, checkStopStatus, stop }) => {
-  useEffect(() => { 
-    aviasalesService.requestTickets().then((data) => checkStopStatus(data.stop));
-   ;
-    console.log('stop', aviasalesService.requestTickets().then((data) => checkStopStatus(data.stop)));
-  }, [aviasalesService, checkStopStatus]);
+const ShowMore = ({ onAddTickets, filteredTickets, visibleTickets }) => {
+  
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {stop === false && (
+      {!filteredTickets.length || visibleTickets === filteredTickets.length ? null : (
         <button onClick={onAddTickets} type="button" className={styles.button}>
           <span className={styles.button_text}>
             Показать еще 5 билетов!
@@ -29,15 +25,14 @@ const ShowMore = ({ onAddTickets, aviasalesService, checkStopStatus, stop }) => 
 
 const mapStateToProps = (state) => {
   return {
-    stop: state.tickets.stop,
     tickets: state.tickets.tickets,
+    filteredTickets: state.tickets.filteredTickets,
     visibleTickets: state.tickets.visibleTickets,
   };
 };
 
 const mapDispatchToProps = {
   onAddTickets: addTickets,
-  checkStopStatus: setStopStatus,
 };
 
 export default withAviasalesService()(

@@ -9,6 +9,19 @@ export default class AviasalesService {
     };
   }
 
+  async checkSearchStatus() {
+    const searchId = localStorage.getItem('searchId');
+    const url = `${this._apiBase}/tickets?searchId=${searchId}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, received ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.stop;
+  }
+
   async requestSearchId() {
     const url = `${this._apiBase}/search`;
     const response = await fetch(url);

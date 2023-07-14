@@ -7,6 +7,7 @@ import {
   CHEAPER_TICKETS,
   FASTER_TICKETS,
   OPTIMAL_TICKETS,
+  FILTERED_TICKETS,
 } from './action-types';
 
 export const updateCheckedList = (checkedList) => ({
@@ -43,6 +44,11 @@ export const setFasterTickets = () => ({
 
 export const setOptimalTickets = () => ({
   type: OPTIMAL_TICKETS,
+});
+
+export const setFilteredTickets = (tickets) => ({
+  type: FILTERED_TICKETS,
+  payload: tickets,
 });
 
 

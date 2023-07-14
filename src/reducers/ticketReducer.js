@@ -2,10 +2,12 @@ import {
   TICKET_LOADED,
   ADD_TICKETS,
   STOP_STATUS,
+  FILTERED_TICKETS,
  } from '../actions/action-types';
 
 const initialState = {
   tickets: [],
+  filteredTickets: [],
   visibleTickets: 5,
   stop: null,
 };
@@ -15,7 +17,7 @@ const ticketReducer = (state = initialState, action) => {
     case TICKET_LOADED:
       return {
         ...state,
-        tickets: action.payload,
+        tickets: [...state.tickets, ...action.payload],
       };
 
     case ADD_TICKETS:
@@ -28,6 +30,12 @@ const ticketReducer = (state = initialState, action) => {
       return {
         ...state,
         stop: action.payload,
+      };
+
+    case FILTERED_TICKETS:
+      return {
+        ...state,
+        filteredTickets: action.payload,
       };
 
     default:
