@@ -1,3 +1,7 @@
+/* eslint-disable consistent-return */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-continue */
 export default class AviasalesService {
   _apiBase = 'https://aviasales-test-api.kata.academy';
 
@@ -9,41 +13,67 @@ export default class AviasalesService {
     };
   }
 
+  async retry(requestFunction, maxAttempts = 3) {
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      try {
+        const response = await requestFunction();
+        return response;
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('received 500')) {
+          attempts++;
+          continue;
+        }
+        throw error;
+      }
+    }
+  }
+
   async checkSearchStatus() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-    const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
+    const requestFunction = async () => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${url}, received ${response.status}`);
+      }
+      return await response.json();
+    };
 
-    const data = await response.json();
-    return data.stop;
+    const response = await this.retry(requestFunction);
+    return response.stop;
   }
 
   async requestSearchId() {
     const url = `${this._apiBase}/search`;
-    const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-    return await response.json();
+    const requestFunction = async () => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${url}, received ${response.status}`);
+      }
+      return await response.json();
+    };
+
+    const response = await this.retry(requestFunction);
+    return response;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async requestTickets() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-    const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-        
+    const requestFunction = async () => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${url}, received ${response.status}`);
+      }
+      return await response.json();
+    };
 
-    return await response.json();
+    const response = await this.retry(requestFunction);
+    return response;
   }
 
   async getTickets() {
@@ -62,7 +92,7 @@ export default class AviasalesService {
       const time = [
         anyDate.getHours(),
         anyDate.getMinutes()
-      ].map((el) => el < 10 ? `0${  el}` : el)
+      ].map((el) => el < 10 ? `0${el}` : el)
       .join(':');
       return time;
     };

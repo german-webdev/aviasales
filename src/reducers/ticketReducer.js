@@ -3,13 +3,16 @@ import {
   ADD_TICKETS,
   STOP_STATUS,
   FILTERED_TICKETS,
+  TICKET_STATUS_LOADING,
+  TICKET_STATUS_REQUEST,
  } from '../actions/action-types';
 
 const initialState = {
   tickets: [],
   filteredTickets: [],
   visibleTickets: 5,
-  stop: null,
+  stop: false,
+  loading: false,
 };
 
 const ticketReducer = (state = initialState, action) => {
@@ -36,6 +39,18 @@ const ticketReducer = (state = initialState, action) => {
       return {
         ...state,
         filteredTickets: action.payload,
+      };
+
+    case TICKET_STATUS_LOADING:
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case TICKET_STATUS_REQUEST:
+      return {
+        ...state,
+        loading: true,
       };
 
     default:

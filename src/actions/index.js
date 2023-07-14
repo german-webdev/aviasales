@@ -8,6 +8,8 @@ import {
   FASTER_TICKETS,
   OPTIMAL_TICKETS,
   FILTERED_TICKETS,
+  TICKET_STATUS_LOADING,
+  TICKET_STATUS_REQUEST,
 } from './action-types';
 
 export const updateCheckedList = (checkedList) => ({
@@ -23,6 +25,14 @@ export const toggleCheckAll = (checkAll) => ({
 export const ticketLoader = (tickets) => ({
   type: TICKET_LOADED,
   payload: tickets,
+});
+
+export const ticketLoading = () => ({
+  type: TICKET_STATUS_LOADING,
+});
+
+export const ticketRequest = () => ({
+  type: TICKET_STATUS_REQUEST,
 });
 
 export const addTickets = () => ({

@@ -1,16 +1,16 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable default-case */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import withAviasalesService from '../hoc';
 import ErrorBoundary from '../error-boundry';
 import Ticket from '../ticket';
-import { ticketLoader, setFilteredTickets, setStopStatus } from '../../actions';
+import { ticketLoader, setFilteredTickets, setStopStatus, ticketLoading, ticketRequest } from '../../actions';
 
 
-const TicketsList = ({ aviasalesService, tickets, onLoadTickets, visibleTickets, cheaper, faster, optimal, checkedList, onSetFilteredTickets, filteredTickets, onSetStopStatus, stop }) => {
+const TicketsList = ({ aviasalesService, tickets, onLoadTickets, visibleTickets, cheaper, faster, optimal, checkedList, onSetFilteredTickets, filteredTickets, onSetStopStatus, stop, setTicketRequest, setTicketLoading }) => {
 
   const filter = () => {
     let filtered = [...tickets];
@@ -53,28 +53,35 @@ const TicketsList = ({ aviasalesService, tickets, onLoadTickets, visibleTickets,
     return filtered;
   };
 
+  const intervalRef = useRef(null);
+
+  const fetchTickets = async () => {
+    try {
+      await aviasalesService.getTickets().then(onLoadTickets);
+      await aviasalesService.checkSearchStatus().then(onSetStopStatus);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    }
+  };
+
   useEffect(() => {
     aviasalesService.getTickets().then(onLoadTickets);
     aviasalesService.checkSearchStatus().then(onSetStopStatus);
   }, []);
 
   useEffect(() => {
-    const fetchTickets = async () => {
-      while (stop === false) {
-        try {
-          await aviasalesService.getTickets().then(onLoadTickets);
-          await aviasalesService.checkSearchStatus().then(onSetStopStatus);
-          console.log('stop-status', aviasalesService.checkSearchStatus().then(onSetStopStatus));
-  
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error) {
-          console.error('Error fetching tickets:', error);
-        }
-      }
+    if (stop && tickets.length > 0) {
+      setTicketLoading();
+      clearInterval(intervalRef.current);
+    } else {
+      setTicketRequest();
+      intervalRef.current = setInterval(fetchTickets, 1000);
+    }
+
+    return () => {
+      clearInterval(intervalRef.current);
     };
-  
-    fetchTickets();
-  }, [aviasalesService, onLoadTickets, onSetStopStatus, stop]);
+  }, [stop]);
 
   useEffect(() => {
       onSetFilteredTickets(filter());
@@ -117,6 +124,8 @@ const mapDispatchToProps = {
   onLoadTickets: ticketLoader,
   onSetFilteredTickets: setFilteredTickets,
   onSetStopStatus: setStopStatus,
+  setTicketRequest: ticketRequest,
+  setTicketLoading: ticketLoading,
 };
 
 export default withAviasalesService()(
