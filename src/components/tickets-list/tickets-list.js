@@ -1,107 +1,72 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable default-case */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import withAviasalesService from '../hoc';
+import compose from '../../utils/compose';
 import ErrorBoundary from '../error-boundry';
+import ErrorIndicator from '../error-indicator';
 import Ticket from '../ticket';
-import { ticketLoader, setFilteredTickets, setStopStatus, ticketLoading, ticketRequest } from '../../actions';
+import {
+  ticketLoader,
+  setFilteredTickets,
+  setStopStatus,
+  ticketLoading,
+  ticketRequest,
+  setErrorStatus,
+} from '../../actions';
+import { filter } from '../auxiliary';
 
 const TicketsList = ({
   aviasalesService,
   tickets,
-  onLoadTickets,
   visibleTickets,
+  onLoadTickets,
+  onSetFilteredTickets,
+  onSetStopStatus,
+  setTicketRequest,
+  setTicketLoading,
+  onError,
   cheaper,
   faster,
   optimal,
   checkedList,
-  onSetFilteredTickets,
   filteredTickets,
-  onSetStopStatus,
   stop,
-  setTicketRequest,
-  setTicketLoading,
   loading,
+  offline,
+  error,
 }) => {
-  const filter = () => {
-    let filtered = [...tickets];
-
-    switch (true) {
-      case cheaper:
-        filtered = filtered.sort((a, b) => a.price - b.price);
-        break;
-      case faster:
-        filtered = filtered.sort((a, b) => {
-          const durationA = a.segments.reduce((total, segment) => total + segment.duration, 0);
-          const durationB = b.segments.reduce((total, segment) => total + segment.duration, 0);
-          return durationA - durationB;
-        });
-        break;
-      case optimal:
-        filtered = filtered.sort((a, b) => {
-          const stopsCountA = a.segments.reduce((total, segment) => total + segment.stops.length, 0);
-          const stopsCountB = b.segments.reduce((total, segment) => total + segment.stops.length, 0);
-
-          if (stopsCountA !== stopsCountB) {
-            return stopsCountA - stopsCountB;
-          }
-          return a.price - b.price;
-        });
-        break;
-      default:
-        break;
-    }
-
-    filtered = filtered.filter((ticket) => {
-      const fromStopsCount = ticket.segments[0].stops.length;
-      const toStopsCount = ticket.segments[1].stops.length;
-      const fromIncluded = checkedList.includes(`${fromStopsCount}`);
-      const toIncluded = checkedList.includes(`${toStopsCount}`);
-
-      return fromIncluded && toIncluded;
-    });
-
-    return filtered;
-  };
-
-  const intervalRef = useRef(null);
-
   const fetchTickets = async () => {
-    try {
-      await aviasalesService.getTickets().then(onLoadTickets);
-      await aviasalesService.checkSearchStatus().then(onSetStopStatus);
-    } catch (error) {
-      // console.error('Error fetching tickets:', error);
-    }
+    await aviasalesService.getTickets().then(onLoadTickets).catch(onError);
+    await aviasalesService.checkSearchStatus().then(onSetStopStatus).catch(onError);
   };
 
   useEffect(() => {
-    aviasalesService.getTickets().then(onLoadTickets);
-    aviasalesService.checkSearchStatus().then(onSetStopStatus);
+    aviasalesService.getSearchId();
   }, []);
 
   useEffect(() => {
-    if (stop && tickets.length > 0) {
+    onSetFilteredTickets(filter(tickets, cheaper, faster, optimal, checkedList));
+
+    let intervalRequest;
+    if ((stop && tickets.length > 0) || offline || error) {
       setTicketLoading();
-      clearInterval(intervalRef.current);
+      clearInterval(intervalRequest);
     } else {
       setTicketRequest();
-      intervalRef.current = setInterval(fetchTickets, 1000);
+      intervalRequest = setInterval(fetchTickets, 1000);
     }
 
     return () => {
-      clearInterval(intervalRef.current);
+      clearInterval(intervalRequest);
     };
-  }, [stop]);
-
-  useEffect(() => {
-    onSetFilteredTickets(filter());
-  }, [cheaper, faster, optimal, checkedList, onSetFilteredTickets, tickets]);
+  }, [stop, offline, error, cheaper, faster, optimal, checkedList, onSetFilteredTickets, tickets]);
 
   const renderTickets = filteredTickets.slice(0, visibleTickets);
+
   const onAirTickets = (
     <ul>
       {renderTickets.map((ticket, i) => (
@@ -112,22 +77,32 @@ const TicketsList = ({
       ))}
     </ul>
   );
-  let content;
 
-  if (!renderTickets.length && tickets.length) {
-    content = <span>&quot;Рейсов, подходящих под заданные фильтры, не найдено&quot;</span>;
-  } else if (loading && !renderTickets.length) {
-    content = <span>&quot;Ищу билеты для Вас...&quot;</span>;
-  } else {
-    content = onAirTickets;
-  }
+  const errorMessage = error ? <ErrorIndicator /> : null;
 
-  return <ErrorBoundary>{content}</ErrorBoundary>;
+  const content = !error ? onAirTickets : null;
+  const searching =
+    loading && !error && !renderTickets.length && checkedList.length ? (
+      <span>&quot;Ищу билеты для Вас...&quot;</span>
+    ) : null;
+  const nothing =
+    !checkedList.length && !error ? <span>&quot;Рейсов, подходящих под заданные фильтры, не найдено&quot;</span> : null;
+
+  return (
+    <ErrorBoundary>
+      {content}
+      {searching}
+      {nothing}
+      {errorMessage}
+    </ErrorBoundary>
+  );
 };
 
 const mapStateToProps = (state) => {
   return {
-    stop: state.tickets.stop,
+    error: state.status.error,
+    offline: state.status.offline,
+    stop: state.status.stop,
     tickets: state.tickets.tickets,
     filteredTickets: state.tickets.filteredTickets,
     visibleTickets: state.tickets.visibleTickets,
@@ -135,7 +110,7 @@ const mapStateToProps = (state) => {
     faster: state.price.faster,
     optimal: state.price.optimal,
     checkedList: state.filter.checkedList,
-    loading: state.tickets.loading,
+    loading: state.status.loading,
   };
 };
 
@@ -145,6 +120,7 @@ const mapDispatchToProps = {
   onSetStopStatus: setStopStatus,
   setTicketRequest: ticketRequest,
   setTicketLoading: ticketLoading,
+  onError: setErrorStatus,
 };
 
-export default withAviasalesService()(connect(mapStateToProps, mapDispatchToProps)(TicketsList));
+export default compose()(withAviasalesService()(connect(mapStateToProps, mapDispatchToProps)(TicketsList)));

@@ -7,14 +7,12 @@ import ErrorBoundary from './components/error-boundry';
 import AviasalesService from './services/aviasales-service';
 import { AviasalesServiceProvider } from './components/aviasales-service-context';
 import store from './store';
-import './index.css';
+import './index.scss';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
-const aviasalesService = new AviasalesService;
-
-
+const aviasalesService = new AviasalesService();
 
 root.render(
   <Provider store={store}>

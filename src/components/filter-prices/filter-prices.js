@@ -9,13 +9,13 @@ const FilterPrices = ({ onCheaperButton, onFasterButton, onOptimalButton }) => {
   return (
     <Radio.Group className="button-group" defaultValue="a" buttonStyle="solid">
       <Radio.Button onClick={onCheaperButton} className="button" value="a">
-        Самый дешевый
+        <p>Самый дешевый</p>
       </Radio.Button>
       <Radio.Button onClick={onFasterButton} className="button" value="b">
-        Самый быстрый
+        <p>Самый быстрый</p>
       </Radio.Button>
       <Radio.Button onClick={onOptimalButton} className="button" value="c">
-        Оптимальный
+        <p>Оптимальный</p>
       </Radio.Button>
     </Radio.Group>
   );

@@ -13,6 +13,14 @@ export default class AviasalesService {
     };
   }
 
+  requestFunction = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, received ${response.status}`);
+    }
+    return await response.json();
+  };
+
   async retry(requestFunction, maxAttempts = 3) {
     let attempts = 0;
     while (attempts < maxAttempts) {
@@ -32,47 +40,20 @@ export default class AviasalesService {
   async checkSearchStatus() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-
-    const requestFunction = async () => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, received ${response.status}`);
-      }
-      return await response.json();
-    };
-
-    const response = await this.retry(requestFunction);
+    const response = await this.retry(() => this.requestFunction(url));
     return response.stop;
   }
 
   async requestSearchId() {
     const url = `${this._apiBase}/search`;
-
-    const requestFunction = async () => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, received ${response.status}`);
-      }
-      return await response.json();
-    };
-
-    const response = await this.retry(requestFunction);
+    const response = await this.retry(() => this.requestFunction(url));
     return response;
   }
 
   async requestTickets() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-
-    const requestFunction = async () => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, received ${response.status}`);
-      }
-      return await response.json();
-    };
-
-    const response = await this.retry(requestFunction);
+    const response = await this.retry(() => this.requestFunction(url));
     return response;
   }
 
@@ -89,18 +70,14 @@ export default class AviasalesService {
     const depDate = new Date(date);
     const arrivDate = new Date(Date.parse(date) + duration * 60000);
     const getTime = (anyDate) => {
-      const time = [
-        anyDate.getHours(),
-        anyDate.getMinutes()
-      ].map((el) => el < 10 ? `0${el}` : el)
-      .join(':');
+      const time = [anyDate.getHours(), anyDate.getMinutes()].map((el) => (el < 10 ? `0${el}` : el)).join(':');
       return time;
     };
 
     const depTime = getTime(depDate);
     const arrivTime = getTime(arrivDate);
     return `${depTime} - ${arrivTime}`;
-  }
+  };
 
   _transformBodyTickets = (info) => {
     return {
@@ -116,7 +93,7 @@ export default class AviasalesService {
     return {
       price: ticket.price,
       logo: this._getLogo(ticket.carrier),
-      segments: ticket.segments.map((body) => this._transformBodyTickets(body))
+      segments: ticket.segments.map((body) => this._transformBodyTickets(body)),
     };
   };
 }

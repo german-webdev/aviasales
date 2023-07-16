@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import Header from '../header/header';
 import FilterTransplant from '../filter-transplant';
@@ -6,32 +7,59 @@ import FilterPrices from '../filter-prices';
 import TicketsList from '../tickets-list';
 import ShowMore from '../show-more';
 import withAviasalesService from '../hoc';
+import OfflineIndicator from '../offline-indicator';
+import { setOfflineStatus } from '../../actions';
 
 import styles from './app.module.scss';
 
-const App = ({ aviasalesService }) => {
+const App = ({ offline, checkOfflineStatus }) => {
+  const updateOfflineStatus = () => {
+    checkOfflineStatus(!navigator.onLine);
+  };
+
   useEffect(() => {
-    aviasalesService.getSearchId();
-    // console.log(aviasalesService.requestTickets());
+    updateOfflineStatus();
+    window.addEventListener('online', updateOfflineStatus);
+    window.addEventListener('offline', updateOfflineStatus);
+
+    return () => {
+      window.removeEventListener('online', updateOfflineStatus);
+      window.removeEventListener('offline', updateOfflineStatus);
+    };
   }, []);
 
   return (
     <div className={styles.wrapper}>
-      <Header />
+      <div className={styles.header_box}>{!offline ? <Header /> : <OfflineIndicator />}</div>
       <main className={styles.main}>
         <aside className={styles.aside}>
           <FilterTransplant />
         </aside>
         <section className={styles.section}>
-          <div className={styles.appHeader}>
+          <div className={styles.app_header}>
             <FilterPrices />
           </div>
-          <div className={styles.appContent}><TicketsList /></div>
-          <div className={styles.appFooter}><ShowMore /></div>
+          <div className={styles.app_content}>
+            <TicketsList />
+          </div>
+          <div className={styles.app_footer}>
+            <ShowMore />
+          </div>
         </section>
       </main>
     </div>
   );
 };
 
-export default withAviasalesService()(App);
+const mapStateToProps = (state) => {
+  return {
+    offline: state.status.offline,
+    error: state.status.error,
+  };
+};
+
+const mapDispatchToProps = {
+  checkOfflineStatus: setOfflineStatus,
+};
+
+export default withAviasalesService()(connect(mapStateToProps, mapDispatchToProps)(App));

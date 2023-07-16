@@ -1,4 +1,4 @@
-.checkboxList {
+.checkbox_container {
   position: sticky;
   top: 20px;
   max-width: 232px;
@@ -7,8 +7,7 @@
   background: #FFF;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.10);
 
-  .checkboxListHeader {
-    width: 232px;
+  &__header {
     color: #4A4A4A;
     font-size: 12px;
     font-style: normal;
@@ -17,36 +16,50 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
     padding: 10px 20px;
+
+    @media (max-width: 596px) {
+      padding: 10px 10px;
+    }
   }
 
-  .checkItems {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  .check_all {
+    .checkbox_label {
+      @extend %label;
+
+      &__text {
+        margin-left: 10px;
+      }
+    }
+
+  }
+
+  .checkbox_items {
+
+    .checkbox_item {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      &__label {
+        @extend %label;
+      }
+
+      &__text {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+
+  @media (max-width: 596px) {
+    padding: 0;
   }
 }
 
-.checkboxLabel {
-  cursor: pointer;
-  display: flex;
-  color: #4A4A4A;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px;
-  width: 232px;
-  height: 40px;
-  padding: 10px 20px;
-}
-
-.checkboxLabel:hover {
-  background: #F1FCFF;
-}
-
-.labelAll {
-  margin-left: 10px;
-}
-
+// input_hidden
 input[type="checkbox"] {
   position: absolute;
   opacity: 0;
@@ -56,6 +69,32 @@ input[type="checkbox"] {
   appearance: none;
 }
 
-input[type="checkbox"]:checked + .checkboxLabel .checkboxCheckbox svg {
-  visibility: visible;
+// _extends
+%label {
+  cursor: pointer;
+  display: flex;
+  color: #4A4A4A;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  height: 40px;
+  padding: 10px 20px;
+
+  &:hover {
+    background: #F1FCFF;
+  }
+
+  @media (max-width: 768px) {
+    height: 30px;
+    line-height: 20px;
+    font-size: 12px;
+    padding: 0 20px;
+  }
+
+  @media (max-width: 596px) {
+    padding: 0 10px;
+  }
 }
+
+

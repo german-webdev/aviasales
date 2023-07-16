@@ -1,6 +1,6 @@
-import { 
-  UPDATE_CHECKED_LIST, 
-  TOGGLE_CHECK_ALL, 
+import {
+  UPDATE_CHECKED_LIST,
+  TOGGLE_CHECK_ALL,
   TICKET_LOADED,
   ADD_TICKETS,
   STOP_STATUS,
@@ -10,6 +10,8 @@ import {
   FILTERED_TICKETS,
   TICKET_STATUS_LOADING,
   TICKET_STATUS_REQUEST,
+  SET_OFFLINE_STATUS,
+  SET_ERROR_STATUS,
 } from './action-types';
 
 export const updateCheckedList = (checkedList) => ({
@@ -61,5 +63,15 @@ export const setFilteredTickets = (tickets) => ({
   payload: tickets,
 });
 
+export const setOfflineStatus = (offline) => {
+  return {
+    type: SET_OFFLINE_STATUS,
+    payload: offline,
+  };
+};
 
-
+export const setErrorStatus = () => {
+  return {
+    type: SET_ERROR_STATUS,
+  };
+};

@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { updateCheckedList, toggleCheckAll } from '../../actions';
 
 import styles from './filter-transplant.module.scss';
+import enabled from './enable.svg';
+import disable from './disable.svg';
 
 const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateCheckedList, onToggleCheckAll }) => {
   const onChange = (list) => {
@@ -27,54 +29,31 @@ const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateChecked
     };
 
     return (
-      <div className={styles.checkboxItem} key={option.value}>
+      <div className={styles.checkbox_item} key={option.value}>
         <input type="checkbox" id={option.value} checked={isChecked} onChange={handleChange} />
-        <label className={styles.checkboxLabel} htmlFor={option.value}>
-          <div className={styles.customCheckbox}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="0.5" y="0.5" width="19" height="19" rx="1.5" stroke="#9ABBCE" />
-              {isChecked && (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="0.5" y="0.5" width="19" height="19" rx="1.5" stroke="#2196F3" />
-                  <path
-                    d="M8.28571 14L4 10.1612L5.20857 9.0787L8.28571 11.8273L14.7914 6L16 7.09021L8.28571 14Z"
-                    fill="#2196F3"
-                  />
-                </svg>
-              )}
-            </svg>
+        <label className={styles.checkbox_item__label} htmlFor={option.value}>
+          <div className={styles.custom_checkbox}>
+            <img src={isChecked ? enabled : disable} alt="checkbox" />
           </div>
-          <span className={styles.labelAll}>{option.label}</span>
+          <span className={styles.checkbox_item__text}>{option.label}</span>
         </label>
       </div>
     );
   };
 
   return (
-    <div className={styles.checkboxList}>
-      <h5 className={styles.checkboxListHeader}>Количество пересадок</h5>
-      <div className={styles.checkAll}>
-        <input type="checkbox" id="checkAll" checked={checkAll} onChange={onCheckAllChange} />
-        <label className={styles.checkboxLabel} htmlFor="checkAll">
-          <div className={styles.customCheckbox}>
-            {checkAll ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="0.5" y="0.5" width="19" height="19" rx="1.5" stroke="#2196F3" />
-                <path
-                  d="M8.28571 14L4 10.1612L5.20857 9.0787L8.28571 11.8273L14.7914 6L16 7.09021L8.28571 14Z"
-                  fill="#2196F3"
-                />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="0.5" y="0.5" width="19" height="19" rx="1.5" stroke="#9ABBCE" />
-              </svg>
-            )}
+    <div className={styles.checkbox_container}>
+      <h5 className={styles.checkbox_container__header}>Количество пересадок</h5>
+      <div className={styles.check_all}>
+        <input type="checkbox" id="check_all" checked={checkAll} onChange={onCheckAllChange} />
+        <label className={styles.checkbox_label} htmlFor="check_all">
+          <div className={styles.custom_checkbox}>
+            <img src={checkAll ? enabled : disable} alt="checkbox" />
           </div>
-          <span className={styles.labelAll}>Все</span>
+          <span className={styles.checkbox_label__text}>Все</span>
         </label>
       </div>
-      <div className={styles.checkItems}>{plainOptions.map(renderCheckbox)}</div>
+      <div className={styles.checkbox_items}>{plainOptions.map(renderCheckbox)}</div>
     </div>
   );
 };

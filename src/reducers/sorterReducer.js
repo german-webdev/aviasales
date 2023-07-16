@@ -1,16 +1,12 @@
-import { 
-  CHEAPER_TICKETS,
-  FASTER_TICKETS,
-  OPTIMAL_TICKETS, 
-} from '../actions/action-types';
+import { CHEAPER_TICKETS, FASTER_TICKETS, OPTIMAL_TICKETS } from '../actions/action-types';
 
 const initialState = {
   cheaper: true,
   faster: false,
-  optimal: false
+  optimal: false,
 };
 
-const priceReducer = (state = initialState, action) => {
+const sorterReducer = (state = initialState, action) => {
   switch (action.type) {
     case CHEAPER_TICKETS:
       return {
@@ -38,4 +34,4 @@ const priceReducer = (state = initialState, action) => {
   }
 };
 
-export default priceReducer;
+export default sorterReducer;

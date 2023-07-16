@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import styles from './header.module.scss';
-import logo from './Logo.svg';
+import logo from './header-logo.svg';
 
 const HeaderLogo = ({ loading }) => {
   const logoClasses = classNames(styles.header__logo, {
@@ -19,7 +19,8 @@ const HeaderLogo = ({ loading }) => {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.tickets.loading,
+    loading: state.status.loading,
+    offline: state.status.offline,
   };
 };
 

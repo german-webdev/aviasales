@@ -3,14 +3,16 @@
   width: 100%;
   justify-content: center;
 
-  &__logo {
-    margin: 25px auto;
+  & .header__logo_rotate {
+    animation: rotate 1s linear infinite;
+  } 
+
+  @media (max-width: 596px) {
+    transform: scale(0.8);
   }
 }
 
-.header__logo_rotate {
-  animation: rotate 1s linear infinite;
-}
+
 
 @keyframes rotate {
   from {

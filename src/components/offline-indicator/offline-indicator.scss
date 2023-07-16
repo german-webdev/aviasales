@@ -1,0 +1,17 @@
+.offline-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  width: 400px;
+  margin-inline: auto;
+
+  &__img {
+    width: 66px;
+    height: 66px;
+  }
+
+  &__message {
+    color: darkblue;
+  }
+}
