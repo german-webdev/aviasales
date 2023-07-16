@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { getPrice, convertDuration, stopsCount } from '../auxiliary';
 
 import styles from './ticket.module.scss';
 
 const Ticket = ({ ticket }) => {
+  let id = 1;
+
   return (
     <div>
       <div className={styles.ticket}>
@@ -15,10 +18,9 @@ const Ticket = ({ ticket }) => {
           </span>
         </div>
 
-        {ticket.segments.map((body, i) => {
+        {ticket.segments.map((body) => {
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <div key={i} className={styles.ticket__info}>
+            <div key={id++} className={styles.ticket__info}>
               <div className={styles.ticket__info_header}>
                 <div>
                   {body.from} – {body.to}
@@ -37,6 +39,22 @@ const Ticket = ({ ticket }) => {
       </div>
     </div>
   );
+};
+
+Ticket.propTypes = {
+  ticket: PropTypes.shape({
+    price: PropTypes.number.isRequired,
+    logo: PropTypes.string.isRequired,
+    segments: PropTypes.arrayOf(
+      PropTypes.shape({
+        from: PropTypes.string.isRequired,
+        to: PropTypes.string.isRequired,
+        timeOfPath: PropTypes.string.isRequired,
+        duration: PropTypes.number.isRequired,
+        stops: PropTypes.arrayOf(PropTypes.string).isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
 };
 
 export default Ticket;

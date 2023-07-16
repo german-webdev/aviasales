@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Radio } from 'antd';
 
@@ -21,18 +22,16 @@ const FilterPrices = ({ onCheaperButton, onFasterButton, onOptimalButton }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    cheaper: state.price.cheaper,
-    faster: state.price.faster,
-    optimal: state.price.optimal,
-  };
-};
-
 const mapDispatchToProps = {
   onCheaperButton: setCheaperTickets,
   onFasterButton: setFasterTickets,
   onOptimalButton: setOptimalTickets,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FilterPrices);
+FilterPrices.propTypes = {
+  onCheaperButton: PropTypes.func.isRequired,
+  onFasterButton: PropTypes.func.isRequired,
+  onOptimalButton: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(FilterPrices);

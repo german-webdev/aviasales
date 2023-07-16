@@ -1,8 +1,6 @@
-/* eslint-disable no-promise-executor-return */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable default-case */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import withAviasalesService from '../hoc';
 import compose from '../../utils/compose';
@@ -39,6 +37,8 @@ const TicketsList = ({
   offline,
   error,
 }) => {
+  let id = 1;
+
   const fetchTickets = async () => {
     await aviasalesService.getTickets().then(onLoadTickets).catch(onError);
     await aviasalesService.checkSearchStatus().then(onSetStopStatus).catch(onError);
@@ -69,9 +69,8 @@ const TicketsList = ({
 
   const onAirTickets = (
     <ul>
-      {renderTickets.map((ticket, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <li key={i}>
+      {renderTickets.map((ticket) => (
+        <li key={id++}>
           <Ticket ticket={ticket} />
         </li>
       ))}
@@ -123,4 +122,59 @@ const mapDispatchToProps = {
   onError: setErrorStatus,
 };
 
-export default compose()(withAviasalesService()(connect(mapStateToProps, mapDispatchToProps)(TicketsList)));
+TicketsList.propTypes = {
+  aviasalesService: PropTypes.shape({
+    getTickets: PropTypes.func.isRequired,
+    checkSearchStatus: PropTypes.func.isRequired,
+    getSearchId: PropTypes.func.isRequired,
+  }).isRequired,
+  tickets: PropTypes.arrayOf(
+    PropTypes.shape({
+      price: PropTypes.number.isRequired,
+      logo: PropTypes.string.isRequired,
+      segments: PropTypes.arrayOf(
+        PropTypes.shape({
+          from: PropTypes.string.isRequired,
+          to: PropTypes.string.isRequired,
+          timeOfPath: PropTypes.string.isRequired,
+          duration: PropTypes.number.isRequired,
+          stops: PropTypes.arrayOf(PropTypes.string).isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+  visibleTickets: PropTypes.number.isRequired,
+  onLoadTickets: PropTypes.func.isRequired,
+  onSetFilteredTickets: PropTypes.func.isRequired,
+  onSetStopStatus: PropTypes.func.isRequired,
+  setTicketRequest: PropTypes.func.isRequired,
+  setTicketLoading: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  cheaper: PropTypes.bool.isRequired,
+  faster: PropTypes.bool.isRequired,
+  optimal: PropTypes.bool.isRequired,
+  checkedList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filteredTickets: PropTypes.arrayOf(
+    PropTypes.shape({
+      price: PropTypes.number.isRequired,
+      logo: PropTypes.string.isRequired,
+      segments: PropTypes.arrayOf(
+        PropTypes.shape({
+          from: PropTypes.string.isRequired,
+          to: PropTypes.string.isRequired,
+          timeOfPath: PropTypes.string.isRequired,
+          duration: PropTypes.number.isRequired,
+          stops: PropTypes.arrayOf(PropTypes.string).isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+  stop: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  offline: PropTypes.bool.isRequired,
+  error: PropTypes.bool.isRequired,
+};
+
+const withTicketsList = compose(withAviasalesService(), connect(mapStateToProps, mapDispatchToProps));
+
+export default withTicketsList(TicketsList);

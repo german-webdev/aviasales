@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
@@ -22,6 +23,10 @@ const mapStateToProps = (state) => {
     loading: state.status.loading,
     offline: state.status.offline,
   };
+};
+
+HeaderLogo.propTypes = {
+  loading: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps)(HeaderLogo);

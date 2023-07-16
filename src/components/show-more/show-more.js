@@ -1,4 +1,6 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import withAviasalesService from '../hoc';
@@ -8,7 +10,6 @@ import styles from './show-more.module.scss';
 
 const ShowMore = ({ onAddTickets, filteredTickets, visibleTickets, error }) => {
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {!filteredTickets.length || visibleTickets === filteredTickets.length || error ? null : (
         <button onClick={onAddTickets} type="button" className={styles.button}>
@@ -30,6 +31,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   onAddTickets: addTickets,
+};
+
+ShowMore.propTypes = {
+  onAddTickets: PropTypes.func.isRequired,
+  filteredTickets: PropTypes.instanceOf(Array).isRequired,
+  visibleTickets: PropTypes.number.isRequired,
+  error: PropTypes.bool.isRequired,
 };
 
 export default withAviasalesService()(connect(mapStateToProps, mapDispatchToProps)(ShowMore));

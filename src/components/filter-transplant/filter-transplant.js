@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { updateCheckedList, toggleCheckAll } from '../../actions';
@@ -67,6 +68,19 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   onUpdateCheckedList: updateCheckedList,
   onToggleCheckAll: toggleCheckAll,
+};
+
+FilterTransplant.propTypes = {
+  plainOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  checkedList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checkAll: PropTypes.bool.isRequired,
+  onUpdateCheckedList: PropTypes.func.isRequired,
+  onToggleCheckAll: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterTransplant);
