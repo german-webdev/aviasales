@@ -91,10 +91,15 @@
     max-width: 100%;
   }
 
+  @media (max-width: 596px) {
+    max-width: 100%;
+    margin-bottom: 10px;
+    height: 155px;
+  }
+
   @media (max-width: 490px) {
     padding: 10px;
     height: 145px;
-    margin-bottom: 10px;
   }
 }
 
