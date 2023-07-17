@@ -76,7 +76,9 @@ const TicketsList = ({
       <span>&quot;Ищу билеты для Вас...&quot;</span>
     ) : null;
   const nothing =
-    !checkedList.length && !error ? <span>&quot;Рейсов, подходящих под заданные фильтры, не найдено&quot;</span> : null;
+    (!checkedList.length && !error) || renderTickets.length ? (
+      <span>&quot;Рейсов, подходящих под заданные фильтры, не найдено&quot;</span>
+    ) : null;
 
   return (
     <ErrorBoundary>
