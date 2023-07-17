@@ -3,6 +3,10 @@
   width: 100%;
   justify-content: center;
 
+  &__logo {
+    cursor: url(../../../public/сursor.svg), auto;
+  }
+
   & .header__logo_rotate {
     animation: rotate 1s linear infinite;
   } 
