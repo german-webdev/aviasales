@@ -1,5 +1,4 @@
 import {
-  STOP_STATUS,
   TICKET_STATUS_LOADING,
   TICKET_STATUS_REQUEST,
   SET_OFFLINE_STATUS,
@@ -7,7 +6,6 @@ import {
 } from '../actions/action-types';
 
 const initialState = {
-  stop: false,
   loading: false,
   error: false,
   offline: false,
@@ -15,12 +13,6 @@ const initialState = {
 
 const statusReducer = (state = initialState, action) => {
   switch (action.type) {
-    case STOP_STATUS:
-      return {
-        ...state,
-        stop: action.payload,
-      };
-
     case TICKET_STATUS_LOADING:
       return {
         ...state,

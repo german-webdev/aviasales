@@ -1,9 +1,8 @@
 import {
   UPDATE_CHECKED_LIST,
   TOGGLE_CHECK_ALL,
-  TICKET_LOADED,
+  DATA_LOADED,
   ADD_TICKETS,
-  STOP_STATUS,
   CHEAPER_TICKETS,
   FASTER_TICKETS,
   OPTIMAL_TICKETS,
@@ -24,9 +23,9 @@ export const toggleCheckAll = (checkAll) => ({
   payload: checkAll,
 });
 
-export const ticketLoader = (tickets) => ({
-  type: TICKET_LOADED,
-  payload: tickets,
+export const dataLoader = (data) => ({
+  type: DATA_LOADED,
+  payload: data,
 });
 
 export const ticketLoading = () => ({
@@ -39,11 +38,6 @@ export const ticketRequest = () => ({
 
 export const addTickets = () => ({
   type: ADD_TICKETS,
-});
-
-export const setStopStatus = (status) => ({
-  type: STOP_STATUS,
-  payload: status,
 });
 
 export const setCheaperTickets = () => ({

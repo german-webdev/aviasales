@@ -37,12 +37,12 @@ export default class AviasalesService {
     }
   }
 
-  async checkSearchStatus() {
-    const searchId = localStorage.getItem('searchId');
-    const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-    const response = await this.retry(() => this.requestFunction(url));
-    return response.stop;
-  }
+  // async checkSearchStatus() {
+  //   const searchId = localStorage.getItem('searchId');
+  //   const url = `${this._apiBase}/tickets?searchId=${searchId}`;
+  //   const response = await this.retry(() => this.requestFunction(url));
+  //   return response.stop;
+  // }
 
   async requestSearchId() {
     const url = `${this._apiBase}/search`;
@@ -50,16 +50,16 @@ export default class AviasalesService {
     return response;
   }
 
-  async requestTickets() {
+  async requestData() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
     const response = await this.retry(() => this.requestFunction(url));
     return response;
   }
 
-  async getTickets() {
-    const data = await this.requestTickets();
-    return data.tickets.map((ticket) => this._transformTickets(ticket));
+  async getData() {
+    const data = await this.requestData();
+    return this._transformDataTickets(data);
   }
 
   _getLogo = (carrier) => {
@@ -79,13 +79,10 @@ export default class AviasalesService {
     return `${depTime} - ${arrivTime}`;
   };
 
-  _transformBodyTickets = (info) => {
+  _transformDataTickets = (data) => {
     return {
-      from: info.origin,
-      to: info.destination,
-      timeOfPath: this._getTimeOfPath(info.date, info.duration),
-      duration: info.duration,
-      stops: info.stops,
+      stop: data.stop,
+      tickets: data.tickets.map((ticket) => this._transformTickets(ticket)),
     };
   };
 
@@ -94,6 +91,16 @@ export default class AviasalesService {
       price: ticket.price,
       logo: this._getLogo(ticket.carrier),
       segments: ticket.segments.map((body) => this._transformBodyTickets(body)),
+    };
+  };
+
+  _transformBodyTickets = (body) => {
+    return {
+      from: body.origin,
+      to: body.destination,
+      timeOfPath: this._getTimeOfPath(body.date, body.duration),
+      duration: body.duration,
+      stops: body.stops,
     };
   };
 }

@@ -7,23 +7,15 @@ import compose from '../../utils/compose';
 import ErrorBoundary from '../error-boundry';
 import ErrorIndicator from '../error-indicator';
 import Ticket from '../ticket';
-import {
-  ticketLoader,
-  setFilteredTickets,
-  setStopStatus,
-  ticketLoading,
-  ticketRequest,
-  setErrorStatus,
-} from '../../actions';
+import { dataLoader, setFilteredTickets, ticketLoading, ticketRequest, setErrorStatus } from '../../actions';
 import { filter } from '../auxiliary';
 
 const TicketsList = ({
   aviasalesService,
   tickets,
+  onLoadData,
   visibleTickets,
-  onLoadTickets,
   onSetFilteredTickets,
-  onSetStopStatus,
   setTicketRequest,
   setTicketLoading,
   onError,
@@ -37,27 +29,25 @@ const TicketsList = ({
   offline,
   error,
 }) => {
-  let id = 1;
-
-  const fetchTickets = async () => {
-    await aviasalesService.getTickets().then(onLoadTickets).catch(onError);
-    await aviasalesService.checkSearchStatus().then(onSetStopStatus).catch(onError);
-  };
-
   useEffect(() => {
     aviasalesService.getSearchId();
   }, []);
 
   useEffect(() => {
+    const fetchData = () => {
+      aviasalesService.getData().then(onLoadData).catch(onError);
+    };
+
     onSetFilteredTickets(filter(tickets, cheaper, faster, optimal, checkedList));
 
     let intervalRequest;
+
     if ((stop && tickets.length > 0) || offline || error) {
-      setTicketLoading();
       clearInterval(intervalRequest);
+      setTicketLoading();
     } else {
       setTicketRequest();
-      intervalRequest = setInterval(fetchTickets, 1000);
+      intervalRequest = setInterval(fetchData, 500);
     }
 
     return () => {
@@ -67,6 +57,7 @@ const TicketsList = ({
 
   const renderTickets = filteredTickets.slice(0, visibleTickets);
 
+  let id = 1;
   const onAirTickets = (
     <ul>
       {renderTickets.map((ticket) => (
@@ -101,8 +92,8 @@ const mapStateToProps = (state) => {
   return {
     error: state.status.error,
     offline: state.status.offline,
-    stop: state.status.stop,
-    tickets: state.tickets.tickets,
+    stop: state.tickets.data.stop,
+    tickets: state.tickets.data.tickets,
     filteredTickets: state.tickets.filteredTickets,
     visibleTickets: state.tickets.visibleTickets,
     cheaper: state.price.cheaper,
@@ -114,9 +105,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  onLoadTickets: ticketLoader,
+  onLoadData: dataLoader,
   onSetFilteredTickets: setFilteredTickets,
-  onSetStopStatus: setStopStatus,
   setTicketRequest: ticketRequest,
   setTicketLoading: ticketLoading,
   onError: setErrorStatus,
@@ -124,8 +114,7 @@ const mapDispatchToProps = {
 
 TicketsList.propTypes = {
   aviasalesService: PropTypes.shape({
-    getTickets: PropTypes.func.isRequired,
-    checkSearchStatus: PropTypes.func.isRequired,
+    getData: PropTypes.func.isRequired,
     getSearchId: PropTypes.func.isRequired,
   }).isRequired,
   tickets: PropTypes.arrayOf(
@@ -143,10 +132,8 @@ TicketsList.propTypes = {
       ).isRequired,
     })
   ).isRequired,
-  visibleTickets: PropTypes.number.isRequired,
-  onLoadTickets: PropTypes.func.isRequired,
+  onLoadData: PropTypes.func.isRequired,
   onSetFilteredTickets: PropTypes.func.isRequired,
-  onSetStopStatus: PropTypes.func.isRequired,
   setTicketRequest: PropTypes.func.isRequired,
   setTicketLoading: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,

@@ -1,17 +1,23 @@
-import { TICKET_LOADED, ADD_TICKETS, FILTERED_TICKETS } from '../actions/action-types';
+import { DATA_LOADED, ADD_TICKETS, FILTERED_TICKETS } from '../actions/action-types';
 
 const initialState = {
-  tickets: [],
+  data: {
+    stop: false,
+    tickets: [],
+  },
   filteredTickets: [],
   visibleTickets: 5,
 };
 
 const ticketReducer = (state = initialState, action) => {
   switch (action.type) {
-    case TICKET_LOADED:
+    case DATA_LOADED:
       return {
         ...state,
-        tickets: [...state.tickets, ...action.payload],
+        data: {
+          stop: action.payload.stop,
+          tickets: [...state.data.tickets, ...action.payload.tickets],
+        },
       };
 
     case ADD_TICKETS:
