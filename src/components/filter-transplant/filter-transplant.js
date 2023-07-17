@@ -34,7 +34,7 @@ const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateChecked
         <input type="checkbox" id={option.value} checked={isChecked} onChange={handleChange} />
         <label className={styles.checkbox_item__label} htmlFor={option.value}>
           <div className={styles.custom_checkbox}>
-            <img src={isChecked ? enabled : disable} alt="checkbox" />
+            {isChecked ? <img src={enabled} alt="checkbox" /> : <img src={disable} alt="checkbox" />}
           </div>
           <span className={styles.checkbox_item__text}>{option.label}</span>
         </label>
@@ -49,7 +49,7 @@ const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateChecked
         <input type="checkbox" id="check_all" checked={checkAll} onChange={onCheckAllChange} />
         <label className={styles.checkbox_label} htmlFor="check_all">
           <div className={styles.custom_checkbox}>
-            <img src={checkAll ? enabled : disable} alt="checkbox" />
+            {checkAll ? <img src={enabled} alt="checkbox" /> : <img src={disable} alt="checkbox" />}
           </div>
           <span className={styles.checkbox_label__text}>Все</span>
         </label>
