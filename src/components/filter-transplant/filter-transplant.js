@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import { updateCheckedList, toggleCheckAll } from '../../actions';
 
 import styles from './filter-transplant.module.scss';
-import enabled from './enable.svg';
-import disable from './disable.svg';
 
 const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateCheckedList, onToggleCheckAll }) => {
+  const toggleCheckbox = (className, additionalClass, condition) => {
+    return classNames(className, {
+      [additionalClass]: condition,
+    });
+  };
+
   const onChange = (list) => {
     onUpdateCheckedList(list);
   };
@@ -33,9 +38,7 @@ const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateChecked
       <div className={styles.checkbox_item} key={option.value}>
         <input type="checkbox" id={option.value} checked={isChecked} onChange={handleChange} />
         <label className={styles.checkbox_item__label} htmlFor={option.value}>
-          <div className={styles.custom_checkbox}>
-            {isChecked ? <img src={enabled} alt="checkbox" /> : <img src={disable} alt="checkbox" />}
-          </div>
+          <span className={toggleCheckbox(styles.custom_checkbox, styles.checked, isChecked)} />
           <span className={styles.checkbox_item__text}>{option.label}</span>
         </label>
       </div>
@@ -48,9 +51,7 @@ const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateChecked
       <div className={styles.check_all}>
         <input type="checkbox" id="check_all" checked={checkAll} onChange={onCheckAllChange} />
         <label className={styles.checkbox_label} htmlFor="check_all">
-          <div className={styles.custom_checkbox}>
-            {checkAll ? <img src={enabled} alt="checkbox" /> : <img src={disable} alt="checkbox" />}
-          </div>
+          <span className={toggleCheckbox(styles.custom_checkbox, styles.checked, checkAll)} />
           <span className={styles.checkbox_label__text}>Все</span>
         </label>
       </div>

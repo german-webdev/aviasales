@@ -23,8 +23,13 @@
   }
 
   .check_all {
+
     .checkbox_label {
       @extend %label;
+
+      .custom_checkbox {
+        @extend %checkbox;
+      }
 
       &__text {
         margin-left: 10px;
@@ -42,6 +47,10 @@
 
       &__label {
         @extend %label;
+
+        .custom_checkbox {
+          @extend %checkbox;
+        }
       }
 
       &__text {
@@ -94,6 +103,28 @@ input[type="checkbox"] {
 
   @media (max-width: 490px) {
     padding: 0 10px;
+  }
+}
+
+%checkbox {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #9ABBCE;
+  border-radius: 1.5px;
+
+  &.checked {
+    border: 1px solid #2196F3;
+    
+    &::after {
+      content: "";
+      display: block;
+      width: 12px;
+      height: 8px;
+      border: solid #2196F3;
+      border-width: 0 0 2px 2px;
+      transform: rotate(-45deg) scale(0.7);
+      margin: 2px 0 0 2px;
+    }
   }
 }
 
