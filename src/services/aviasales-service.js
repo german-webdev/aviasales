@@ -21,7 +21,7 @@ export default class AviasalesService {
     return await response.json();
   };
 
-  async retry(requestFunction, maxAttempts = 3) {
+  async retry(requestFunction, maxAttempts = 5) {
     let attempts = 0;
     while (attempts < maxAttempts) {
       try {
@@ -36,13 +36,6 @@ export default class AviasalesService {
       }
     }
   }
-
-  // async checkSearchStatus() {
-  //   const searchId = localStorage.getItem('searchId');
-  //   const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-  //   const response = await this.retry(() => this.requestFunction(url));
-  //   return response.stop;
-  // }
 
   async requestSearchId() {
     const url = `${this._apiBase}/search`;
