@@ -97,3 +97,7 @@ export default class AviasalesService {
     };
   };
 }
+
+const loadId = new AviasalesService();
+
+loadId.getSearchId();

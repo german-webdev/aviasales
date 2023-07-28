@@ -31,10 +31,6 @@ const TicketsList = ({
   error,
 }) => {
   useEffect(() => {
-    aviasalesService.getSearchId();
-  }, []);
-
-  useEffect(() => {
     const fetchData = () => {
       aviasalesService.getData().then(onLoadData).catch(onError);
     };
