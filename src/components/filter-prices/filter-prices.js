@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Radio } from 'antd';
@@ -10,13 +9,13 @@ const FilterPrices = ({ onCheaperButton, onFasterButton, onOptimalButton }) => {
   return (
     <Radio.Group className="button-group" defaultValue="a" buttonStyle="solid">
       <Radio.Button onClick={onCheaperButton} className="button" value="a">
-        <p>Самый дешевый</p>
+        <div>Самый дешевый</div>
       </Radio.Button>
       <Radio.Button onClick={onFasterButton} className="button" value="b">
-        <p>Самый быстрый</p>
+        <div>Самый быстрый</div>
       </Radio.Button>
       <Radio.Button onClick={onOptimalButton} className="button" value="c">
-        <p>Оптимальный</p>
+        <div>Оптимальный</div>
       </Radio.Button>
     </Radio.Group>
   );

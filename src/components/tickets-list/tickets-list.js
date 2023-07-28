@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { v4 as id } from 'uuid';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -57,11 +58,10 @@ const TicketsList = ({
 
   const renderTickets = filteredTickets.slice(0, visibleTickets);
 
-  let id = 1;
   const onAirTickets = (
     <ul>
       {renderTickets.map((ticket) => (
-        <li key={id++}>
+        <li key={id()}>
           <Ticket ticket={ticket} />
         </li>
       ))}

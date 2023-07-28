@@ -1,4 +1,4 @@
-import React from 'react';
+import { v4 as id } from 'uuid';
 import PropTypes from 'prop-types';
 
 import { getPrice, convertDuration, stopsCount } from '../auxiliary';
@@ -6,8 +6,6 @@ import { getPrice, convertDuration, stopsCount } from '../auxiliary';
 import styles from './ticket.module.scss';
 
 const Ticket = ({ ticket }) => {
-  let id = 1;
-
   return (
     <div>
       <div className={styles.ticket}>
@@ -20,17 +18,19 @@ const Ticket = ({ ticket }) => {
 
         {ticket.segments.map((body) => {
           return (
-            <div key={id++} className={styles.ticket__info}>
-              <div className={styles.ticket__info_header}>
+            <div key={id()} className={styles.ticket__info}>
+              <div className={styles.ticket__info_col_1}>
                 <div>
                   {body.from} – {body.to}
                 </div>
-                <div>В пути</div>
-                {stopsCount(body)}
-              </div>
-              <div className={styles.ticket__info_content}>
                 <div>{body.timeOfPath}</div>
+              </div>
+              <div className={styles.ticket__info_col_2}>
+                <div>В пути</div>
                 <div>{convertDuration(body.duration)}</div>
+              </div>
+              <div className={styles.ticket__info_col_3}>
+                <div>{stopsCount(body)}</div>
                 <div>{body.stops.join(', ')}</div>
               </div>
             </div>

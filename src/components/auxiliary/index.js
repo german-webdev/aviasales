@@ -10,18 +10,16 @@ export const convertDuration = (min) => {
 };
 
 export const stopsCount = (body) => {
-  let stops = null;
-  if (body.stops.length) {
-    if (body.stops.length === 1) {
-      stops = <div>{body.stops.length} пересадка</div>;
-    } else {
-      stops = <div>{body.stops.length} пересадки</div>;
-    }
-  } else {
-    stops = <div>Без пересадок</div>;
-  }
+  const { stops } = body;
+  const count = stops.length;
 
-  return stops;
+  if (count === 0) {
+    return 'Без пересадок';
+  }
+  if (count === 1) {
+    return '1 пересадка';
+  }
+  return `${count} пересадки`;
 };
 
 export const filter = (arr, cheaper, faster, optimal, checkedList) => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -8,11 +7,8 @@ import { updateCheckedList, toggleCheckAll } from '../../actions';
 import styles from './filter-transplant.module.scss';
 
 const FilterTransplant = ({ plainOptions, checkedList, checkAll, onUpdateCheckedList, onToggleCheckAll }) => {
-  const toggleCheckbox = (className, additionalClass, condition) => {
-    return classNames(className, {
-      [additionalClass]: condition,
-    });
-  };
+  const toggleCheckbox = (className, additionalClass, condition) =>
+    classNames(className, { [additionalClass]: condition });
 
   const onChange = (list) => {
     onUpdateCheckedList(list);

@@ -1,4 +1,3 @@
-import React from 'react';
 import './offline-indicator.scss';
 
 import offline from './kingdom-63.png';
