@@ -7,8 +7,8 @@ export default class AviasalesService {
 
   constructor() {
     this.getSearchId = () => {
-      this.requestSearchId().then((searchId) => {
-        localStorage.setItem('searchId', searchId.searchId);
+      this.requestSearchId().then((id) => {
+        localStorage.setItem('searchId', id.searchId);
       });
     };
   }
@@ -46,7 +46,7 @@ export default class AviasalesService {
   async requestData() {
     const searchId = localStorage.getItem('searchId');
     const url = `${this._apiBase}/tickets?searchId=${searchId}`;
-    const response = await this.retry(() => this.requestFunction(url));
+    const response = searchId && (await this.retry(() => this.requestFunction(url)));
     return response;
   }
 
